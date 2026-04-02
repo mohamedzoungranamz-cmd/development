@@ -1,109 +1,119 @@
-patients = []
+products = []
 
-while True :
-     print(f"\n 1- Ajouter un patient \n 2- Voir toutes les patients \n 3- Voir les trois derniers patients \n 4- Supprimer un patient \n 5- Marquer un patient comme soigné \n 6- Voir tous patients soignés \n 7- Voir tous les patients non soignés \n 8- Quitter ")
+while True:
+     print(f"\n 1- Ajouter un produit \n 2- Voir tous les produits \n 3- Voir les 5 derniers produits \n 4- Supprimer un produit \n 5- Modifier le prix d'un produit \n 6- Voir les produits chers (prix > 1000)\n 7- Voir les produits pas chers (prix <= 1000)\n 8- Quitter")
 
-     try : 
+     try :
           choice = int(input("Que voulez-vous faire ?: "))
      except ValueError:
-          print(f"Ceci est un choix invalide")
+          print(f"Ceci est un choix invalide ")
           continue
-          # Ajouter un patient
+
      if choice == 1:
-          patient_name = input("Quel est le nom du patient ?: ")
-          
-          if patient_name == "":
-               print(f"Vous devez entrer un nom")
+          product_name = input("Quel est le nom du produit : ")
+
+          if product_name == "":
+               print(f"Vous devez entrer un nom ")
           else:
-               if any( patient[0] == patient_name for patient in patients ):
+               if any (product_name == product[0] for product in products):
                     print(f"Ce nom existe déjà dans la liste")
                else:
-                    try:
-                         patient_status = int(input("Quel est l'etat du patient 1) Soigné(e)  2) Pas soigné(e) : "))                        
-                    except ValueError:
-                         print(f"Ceci est un choix invalide")
-                         continue
-                    if patient_status == 1:
-                         patients.append([patient_name, "Soigné(e)"])
-                         print(f"Vous avez ajouté un nouveau patient")
-                    elif patient_status == 2:
-                         patients.append([patient_name, "Pas soigné(e)"])
-                         print(f"Vous avez ajouté un nouveau patient")
-                    else:
-                         print(f"Ce choix est invalide !")
-     # Voir tous les patients
+                    while True:
+                         try:
+                              product_price = int(input("Quel est son prix ? "))
+                              
+                              products.append([product_name, product_price])
+                              print(f"Vous avez ajouté un produit")
+                              break
+                         except ValueError:
+                              print(f"Ceci n'est pas un prix")
+                              continue
      elif choice == 2:
-          if  not patients:
-               print(f"Aucun patient pour le moment")
+          if not products:
+               print(f"Aucun produit pour l'instant")
           else:
-               for i, patient in enumerate(patients, start=1):
-                    print(f"{i}- {patient[0]} : {patient[1]}")
-     # Voir les trois derniers patients
-     elif choice == 3:
-          if not patients:
-               print(f"Aucun patient pour l'instant")
-          else:
-               for i, patient in enumerate(patients[-3:], start=1):
-                    print(f"{i}- {patient[0]} : {patient[1]}")
-     # suppr un patient
-     elif choice == 4:
-          if not patients:
-               print(f"Aucun patient pour l'instant")
-          else:
-               try:
-                    patient_index = int(input("Quel est l'index du patient ?: "))
-               except ValueError:
-                    print(f"Ce choice est invalide ")
-                    continue
-               
-               patient_index -= 1
-               if 0 <= patient_index < len(patients):
-                    patients.pop(patient_index)
-                    print(f"Vous avez supprimé un patient de votre liste ")
-               else:
-                    print(f"Cet index n'est pas dans la liste")
-     # Mettre l'etat d'un patient à jour
-     elif choice == 5:
-          if not patients:
-               print(f"Aucun patient pour l'instant")
-          else:
-               try:
-                    patient_index = int(input("Quel est l'index du patient ?: "))
-               except ValueError:
-                    print(f"Ce choice est invalide ")
-                    continue
+               for i, product in enumerate(products, start=1):
+                    print(f"{i}- {product[0]} : {product[1]} Fcfa")
 
-               patient_index -= 1
-               if 0 <= patient_index < len(patients):
-                    patients[patient_index][1] = "Soigné(e)"
-                    print(f"Vous avez  mis à jour l'état d'un patient")
+     elif choice == 3:
+          if not products:
+               print(f"Aucun produit pour l'instant")
+          else:
+               for i, product in enumerate(products[-5:], start=1):
+                    print(f"{i}- {product[0]} : {product[1]} Fcfa")
+
+     elif choice == 4:
+          if not products:
+               print(f"Votre liste est vide")
+          else:
+               try:
+                    product_index = int(input("Quel est l'index du produit "))
+               except ValueError:
+                    print(f"Ceci n'est pas un index")
+               product_index -= 1
+
+               if 0 <= product_index < len(products):
+                    products.pop(product_index)
+                    print(f"Vous avez supprimé un produit")
                else:
-                    print(f"Cet index n'est pas dans la liste")
+                    print(f"Cet index n'existe pas la liste ")
+          
+     elif choice == 5:
+          if not products:
+               print(f"Votre liste est vide")
+          else:
+               try:
+                    product_index = int(input("Quel est l'index du produit "))
+               except ValueError:
+                    print(f"Ceci n'est pas un index")
+               product_index -= 1
+               
+               if 0 <= product_index < len(products):
+                    while True:
+                         try:
+                              product_price = int(input("Indiquer le nouveau prix ? "))
+                              for product in products:
+                                   products[product_index][1] = product_price
+                              
+                              print(f"Vous avez mis à jour le prix  d'un produit")
+                              break
+                         except ValueError:
+                              print(f"Ceci n'est pas un prix")
+                              continue
+                    
+               else:
+                    print(f"Cet index n'existe pas la liste ")
+          
      elif choice == 6:
-          if  not patients :
-               print(f"La liste est vide ")
+          if not products:
+               print(f"Votre liste est vide")
           else:
                found = False
-               for i, patient in enumerate(patients, start=1):
-                    if patient[1] == "Soigné(e)":
-                         print(f"{i}- {patient[0]} : {patient[1]}")
+               for i, product in enumerate (products, start=1):
+                    if product[1] > 1000:      
+                         print(f"{i}- {product[0]} : {product[1]} Fcfa")
                          found = True
-                    if not found:
-                         print(f"Aucun patient soigné pour l'instant")
+
+               if not found :
+                    print(f"Aucun produit cher") 
+
 
      elif choice == 7:
-          if  not patients :
-               print(f"La liste est vide ")
+          if not products:
+               print(f"Votre liste est vide")
           else:
                found = False
-               for i, patient in enumerate(patients, start=1):
-                    if patient[1] == "Pas soigné(e)":
-                         print(f"{i}- {patient[0]} : {patient[1]}")
+               for i, product in enumerate (products, start=1):
+                    if product[1] <= 1000:      
+                         print(f"{i}- {product[0]} : {product[1]} Fcfa")
                          found = True
-                    if not found:
-                         print(f"Aucun patient pa s soigné pour l'instant")
+
+               if not found :
+                    print(f"Aucun produit pas cher") 
+
+
+          
 
 
 
-
-     
+                         

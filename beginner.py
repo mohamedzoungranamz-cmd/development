@@ -1,119 +1,103 @@
-products = []
+inventory = []
+energy = 100
 
-while True:
-     print(f"\n 1- Ajouter un produit \n 2- Voir tous les produits \n 3- Voir les 5 derniers produits \n 4- Supprimer un produit \n 5- Modifier le prix d'un produit \n 6- Voir les produits chers (prix > 1000)\n 7- Voir les produits pas chers (prix <= 1000)\n 8- Quitter")
-
+while True :
+     print(f"\n 1- Ajouter un objet \n 2- Voir tous les objets \n 3- Voir les 3 derniers objets \n 4- Supprimer un objet \n 5- Utiliser un objet (réduit énergie) \n 6- Se reposer (augmente énergie, max 100) \n 7- Voir énergie \n 8- Quitter")
      try :
-          choice = int(input("Que voulez-vous faire ?: "))
+          choice = int(input("Que voulez-vous faire ? "))
      except ValueError:
-          print(f"Ceci est un choix invalide ")
+          print(f"Ceci est un choix invalide")
           continue
 
      if choice == 1:
-          product_name = input("Quel est le nom du produit : ")
+          object_name = input("Son nom : ")
 
-          if product_name == "":
-               print(f"Vous devez entrer un nom ")
+          if object_name == "":
+               print(f"Vous devez entrer un nom")
           else:
-               if any (product_name == product[0] for product in products):
+               if any (object_name == obj[0] for obj in inventory ):
                     print(f"Ce nom existe déjà dans la liste")
                else:
                     while True:
                          try:
-                              product_price = int(input("Quel est son prix ? "))
-                              
-                              products.append([product_name, product_price])
-                              print(f"Vous avez ajouté un produit")
-                              break
+                              object_energy = int(input("Entrer son coût en énergie : "))
+
+                              if object_energy > 100:
+                                   print(f"L'énergie de l'objet ne doit pas dépasser 100")
+                              else:
+                                   inventory.append([object_name,object_energy])
+                                   print(f"Vous avez ajouté un nouveau objet")
+                                   break
                          except ValueError:
-                              print(f"Ceci n'est pas un prix")
-                              continue
+                              print(f"Ceci n'est pas un coût d'énergie")
+                              continue 
+     
      elif choice == 2:
-          if not products:
-               print(f"Aucun produit pour l'instant")
+          if not inventory:
+               print(f"Vous ne disposez d'aucun objet")
           else:
-               for i, product in enumerate(products, start=1):
-                    print(f"{i}- {product[0]} : {product[1]} Fcfa")
+               for i, obj in enumerate(inventory, start=1):
+                    print(f"{i}- {obj[0]} : {obj[1]}")
 
      elif choice == 3:
-          if not products:
-               print(f"Aucun produit pour l'instant")
+          if not inventory:
+               print(f"Vous ne disposez d'aucun objet")
           else:
-               for i, product in enumerate(products[-5:], start=1):
-                    print(f"{i}- {product[0]} : {product[1]} Fcfa")
-
-     elif choice == 4:
-          if not products:
-               print(f"Votre liste est vide")
-          else:
-               try:
-                    product_index = int(input("Quel est l'index du produit "))
-               except ValueError:
-                    print(f"Ceci n'est pas un index")
-               product_index -= 1
-
-               if 0 <= product_index < len(products):
-                    products.pop(product_index)
-                    print(f"Vous avez supprimé un produit")
-               else:
-                    print(f"Cet index n'existe pas la liste ")
-          
-     elif choice == 5:
-          if not products:
-               print(f"Votre liste est vide")
-          else:
-               try:
-                    product_index = int(input("Quel est l'index du produit "))
-               except ValueError:
-                    print(f"Ceci n'est pas un index")
-               product_index -= 1
+               for i, obj in enumerate(inventory[-3:], start=1):
+                    print(f"{i}- {obj[0]} : {obj[1]}")
                
-               if 0 <= product_index < len(products):
+     elif choice == 4:
+          if not inventory :
+               print(f"Vous ne disposez d'aucun objet")
+          else:
+               while True:
+                    try:
+                         object_index = int(input("Quel est son index : "))
+
+                         object_index -= 1
+                         if 0 <= object_index < len(inventory):
+                              inventory.pop(object_index)
+                              print(f"Vous avez supprimé un objet ")
+                              break
+                         else:
+                              print(f"Cet index est inexistant dans la liste")
+                    except ValueError:
+                         print(f"Ceci n'est pas un index")
+                         
+     elif choice == 5:
+          if not inventory :
+               print(f"Vous disposez aucun d'objet")
+          else:
+               if energy <= 0:
+                    print(f"Vous ne disposez pas d'énergie pour pouvoir utiliser un objet")
+               else:
                     while True:
                          try:
-                              product_price = int(input("Indiquer le nouveau prix ? "))
-                              for product in products:
-                                   products[product_index][1] = product_price
-                              
-                              print(f"Vous avez mis à jour le prix  d'un produit")
-                              break
+                              object_index = int(input("Quel est son index : "))
+
+                              object_index -= 1
+                              if 0 <= object_index < len(inventory):
+                                   energy -= inventory[object_index][1]
+                                   print(f"Vous avez utilisé un objet du nom de {inventory[object_index][0]}")
+                                   break
+                              else:
+                                   print(f"Cet index est inexistant dans la liste")
                          except ValueError:
-                              print(f"Ceci n'est pas un prix")
-                              continue
-                    
-               else:
-                    print(f"Cet index n'existe pas la liste ")
-          
+                              print(f"Ceci n'est pas un index")
+     
      elif choice == 6:
-          if not products:
-               print(f"Votre liste est vide")
+          if energy >= 100:
+               print(f"Vous êtes plein d'énergie")   
           else:
-               found = False
-               for i, product in enumerate (products, start=1):
-                    if product[1] > 1000:      
-                         print(f"{i}- {product[0]} : {product[1]} Fcfa")
-                         found = True
-
-               if not found :
-                    print(f"Aucun produit cher") 
-
+               energy = 100
+               print(f"Vous avez gagné en puissance")     
 
      elif choice == 7:
-          if not products:
-               print(f"Votre liste est vide")
-          else:
-               found = False
-               for i, product in enumerate (products, start=1):
-                    if product[1] <= 1000:      
-                         print(f"{i}- {product[0]} : {product[1]} Fcfa")
-                         found = True
+          print(f" Vous disposez de {energy} énergie(s)")
 
-               if not found :
-                    print(f"Aucun produit pas cher") 
-
-
-          
-
-
-
+     elif choice == 8:
+          print(f"Au revoir et à bienôt")
+          break
+     else:
+          print(f"Ce choix est inexistant la liste")         
                          
